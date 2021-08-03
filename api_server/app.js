@@ -3,6 +3,7 @@ const express = require('express')
 // 创建express的服务器实例
 const app = express()
 
+
 // 导入cors中间件
 const cors = require('cors')
 app.use(cors())
@@ -23,9 +24,26 @@ app.use((req, res, next) => {
   next()
 })
 
+// 在路由之前配置解析Token的中間件
+const expressJWT = require('express-jwt')
+// 導入配置文件
+const config = require('./config')
+// 解密配置文件中的秘鑰，並使用.uless()指定哪些接口無需token身份認證
+app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
+
+// 定義錯誤級別的中間件
+app.use((err, req, res, next) => {
+  // 身份認證失敗導致的錯誤
+  if (err.name === 'UnauthorizedError') return res.cc('身份認證失敗TT')
+  // 未知的錯誤
+  res.cc(err)
+  // next()
+})
+
 // 导入并注册用户路由模块
 const userRouter = require('./router/user')
 app.use('/api', userRouter)
+
 
 // 调用app.listen方法，指定端口号并启动web服务器
 app.listen(3007, function () {
