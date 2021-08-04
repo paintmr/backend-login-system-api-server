@@ -77,7 +77,7 @@ exports.regUser = (req, res) => {
 exports.login = (req, res) => {
   const userinfo = req.body
 
-  // 用joi來驗證表單數據是否和規則
+  // 用joi來驗證表單數據是否符合規則
   const { error, value } = reg_login_schema.validate({ username: userinfo.username, password: userinfo.password })
   if (error) {
     return res.cc(error.details[0].message)
