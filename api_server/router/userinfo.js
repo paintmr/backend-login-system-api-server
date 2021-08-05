@@ -15,5 +15,8 @@ router.post('/userinfo', userinfo_handler.updateUserInfo)
 // 重置密码的路由
 router.post('/updated', userinfo_handler.updatedPassword)
 
+// 更換頭像的路由
+router.post('/update/avatar', userinfo_handler.updateAvatar)
+
 // 向外共享路由对象
 module.exports = router

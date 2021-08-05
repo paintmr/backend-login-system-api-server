@@ -49,6 +49,10 @@ const userinfoRouter = require('./router/userinfo')
 // 以/my开头的接口，都是有权限的接口，需要进行Token身份认证
 app.use('/my', userinfoRouter)
 
+// 導入並使用文章分類路由模塊
+const artCateRouter = require('./router/artcate')
+app.use('/my/article', artCateRouter)
+
 // 调用app.listen方法，指定端口号并启动web服务器
 app.listen(3007, function () {
   console.log('api server running at http://127.0.0.1:3007')

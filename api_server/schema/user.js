@@ -25,7 +25,7 @@ exports.update_userinfo_schema = Joi.object({
   email: Joi.string().email().required()
 })
 
-// 設置密碼校驗規則
+// 更新密碼校驗規則
 exports.update_password_schema = Joi.object({
   // 表示需要對req.body中的數據進行驗證
   oldPwd: Joi.string().pattern(new RegExp('^[\\S]{6,12}$')).required(), //舊密碼要符合密碼規則
@@ -35,4 +35,9 @@ exports.update_password_schema = Joi.object({
   // newPwd:Joi.invalid(Joi.ref('oldPwd'))表示新密碼不能和舊密碼一模一樣。
   // concat後面的是密碼的規則
   // concat把前後兩個特性連接起來
+})
+
+// 更新用戶頭像校驗規則
+exports.update_avatar_schema = Joi.object({
+  avatar: Joi.string().dataUri().required(),
 })

@@ -1,8 +1,10 @@
 // 导入数据库操作模块
 const db = require('../db/index')
+// 导入bcryptjs，驗證加密的密碼
+const bcrypt = require('bcryptjs')
 
 // 導入需要的驗證規則對象
-const { update_userinfo_schema, update_password_schema } = require('../schema/user')
+const { update_userinfo_schema, update_password_schema, update_avatar_schema } = require('../schema/user')
 
 // 获取用户基本信息的处理函数
 exports.getUserInfo = (req, res) => {
@@ -68,7 +70,53 @@ exports.updatedPassword = (req, res) => {
     if (err) return res.cc(err)
     // 檢查制定id的用戶是否存在
     if (results.length !== 1) return Reflect.cc('用戶不存在TT')
-    res.cc('i')
 
+    // 判斷提交的舊密碼是否正確
+    const compareResult = bcrypt.compareSync(userinfo.oldPwd, results[0].password)
+    if (!compareResult) return res.cc('原密碼錯誤！')
+
+    // 對新密碼進行bcrypt加密後，更新到數據庫中
+    // 定義更新用戶密碼的SQL語句
+    const sql = 'update ev_users set password=? where id=?'
+    // 對新密碼進行bcrypt加密處理
+    const newPwd = bcrypt.hashSync(req.body.newPwd, 10)
+    // 執行SQL語句，根據id更新用戶的密碼
+    db.query(sql, [newPwd, req.user.id], (err, results) => {
+      // 如果SQL語句執行直白
+      if (err) return res.cc(err)
+      // 如果SQL語句執行成功，但是影響行數不等於1
+      if (results.affectedRows !== 1) return res.cc('更新密碼失敗TT')
+      // 如果更新密碼成功
+      res.send({
+        status: 0,
+        message: '修改密碼成功！',
+      })
+    })
+  })
+}
+
+// 更新頭像的處理函數
+exports.updateAvatar = (req, res) => {
+  const userinfo = req.body
+
+  // 用joi來驗證表單數據是否符合規則
+  const { error, value } = update_avatar_schema.validate({ avatar: userinfo.avatar })
+  if (error) {
+    return res.cc(error.details[0].message)
+  }
+
+  // 定義更新用戶頭像的SQL語句
+  const sql = 'update ev_users set user_pic=? where id=?'
+  // 調用db.query()執行SQL語句，更新對應用戶的頭像
+  db.query(sql, [req.body.avatar, req.user.id], (err, results) => {
+    // 如果執行SQL語句失敗
+    if (err) return res.cc(err)
+    // 如果執行SQL語句成功，但是影響行數不等於1
+    if (results.affectedRows !== 1) return res.cc('更新頭像失敗TT')
+    // 如果更新用戶頭像成功
+    res.send({
+      status: 0,
+      message: '更新頭像成功！',
+    })
   })
 }
