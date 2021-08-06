@@ -41,3 +41,4 @@ exports.update_password_schema = Joi.object({
 exports.update_avatar_schema = Joi.object({
   avatar: Joi.string().dataUri().required(),
 })
+
