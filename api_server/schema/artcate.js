@@ -10,3 +10,10 @@ exports.add_cate_schema = Joi.object({
 exports.cate_id_schema = Joi.object({
   id: Joi.number().integer().required()
 })
+
+// 根據id更新文章分類的校驗規則
+exports.update_cate_schema = Joi.object({
+  id: Joi.number().integer().required(),
+  name: Joi.string().required(),
+  alias: Joi.string().alphanum().required()
+})

@@ -51,7 +51,11 @@ app.use('/my', userinfoRouter)
 
 // 導入並使用文章分類路由模塊
 const artCateRouter = require('./router/artcate')
-app.use('/my/article', artCateRouter)
+app.use('/my/articlecate', artCateRouter)
+
+// 導入並使用文章路由模塊
+const articleRouter = require('./router/article')
+app.use('/my/article', articleRouter)
 
 // 调用app.listen方法，指定端口号并启动web服务器
 app.listen(3007, function () {

@@ -19,5 +19,8 @@ router.get('/deletecate/:id', artcate_handler.deleteCateById)
 // 根據id獲取文章分類的路由
 router.get('/cate/:id', artcate_handler.getArticleById)
 
+// 根據id更新文章分類的路由
+router.post('/updatecate', artcate_handler.updateCateById)
+
 // 向外共享路由對象
 module.exports = router
