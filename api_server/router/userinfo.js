@@ -13,7 +13,7 @@ router.get('/userinfo', userinfo_handler.getUserInfo)
 router.post('/userinfo', userinfo_handler.updateUserInfo)
 
 // 重置密码的路由
-router.post('/updated', userinfo_handler.updatedPassword)
+router.post('/updatepwd', userinfo_handler.updatedPassword)
 
 // 更換頭像的路由
 router.post('/update/avatar', userinfo_handler.updateAvatar)

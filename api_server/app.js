@@ -4,7 +4,7 @@ const express = require('express')
 const app = express()
 
 
-// 导入cors中间件
+// 导入cors中间件，解决跨域的问题
 const cors = require('cors')
 app.use(cors())
 
@@ -51,11 +51,14 @@ app.use('/my', userinfoRouter)
 
 // 導入並使用文章分類路由模塊
 const artCateRouter = require('./router/artcate')
-app.use('/my/articlecate', artCateRouter)
+app.use('/my/article', artCateRouter)
 
 // 導入並使用文章路由模塊
 const articleRouter = require('./router/article')
 app.use('/my/article', articleRouter)
+
+// 託管靜態資源文件
+app.use('/uploads', express.static('./uploads'))
 
 // 调用app.listen方法，指定端口号并启动web服务器
 app.listen(3007, function () {

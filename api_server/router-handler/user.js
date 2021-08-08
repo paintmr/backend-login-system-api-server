@@ -21,7 +21,7 @@ exports.regUser = (req, res) => {
   //   return res.cc('用戶名或密碼不合規則TT')
   // }
 
-  // 用joi來驗證表單數據是否和規則
+  // 用joi來驗證表單數據是否合規則
   const { error, value } = reg_login_schema.validate({ username: userinfo.username, password: userinfo.password })
   // console.log(error, value);
   // console.log(error.details[0].message)
@@ -66,10 +66,7 @@ exports.regUser = (req, res) => {
       // res.send({ status: 0, message: '註冊成功！' }) //注釋掉這段代碼，改用封裝好的中間件res.cc
       res.cc('註冊成功！', 0)
     })
-
   })
-
-
   // res.send('reguser OK')
 }
 
