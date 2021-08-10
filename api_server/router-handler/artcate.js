@@ -4,7 +4,7 @@ const db = require('../db/index')
 // 導入需要的驗證規則對象
 const { add_cate_schema, cate_id_schema, update_cate_schema } = require('../schema/artcate')
 
-// 獲取文字分類列表的處理函數
+// 獲取文章分類列表的處理函數
 exports.getArticleCates = (req, res) => {
   // 定義SQL語句
   // 根據分類的狀態，獲取所有未被刪除的分類列表數據
@@ -63,31 +63,6 @@ exports.addArticleCates = (req, res) => {
   })
 }
 
-// 根據id刪除文章分類的處理函數
-exports.deleteCateById = (req, res) => {
-  // 用joi來驗證表單數據是否符合規則
-  const { error, value } = cate_id_schema.validate({ id: req.params.id })
-  if (error) {
-    return res.cc(error.details[0].message)
-  }
-
-  // 實現刪除文章分類的功能
-  // 定義刪除文章分類的SQL語句
-  const sql = 'update ev_article_cate set is_delete=1 where id=?'
-  // 調用db.query()執行刪除文章分類的SQL語句
-  db.query(sql, req.params.id, (err, results) => {
-    // 如果執行SQL語句失敗
-    if (err) return res.cc(err)
-    // 如果SQL語句執行成功，但是影響行數不等於1
-    if (results.affectedRows !== 1) return res.cc('刪除文章分類失敗TT')
-    // 刪除文章分類成功
-    res.send({
-      status: 0,
-      message: '成功刪除文章分類！'
-    })
-  })
-}
-
 // 根據id獲取文章分類的處理函數
 exports.getArticleById = (req, res) => {
   // 用joi來驗證表單數據是否符合規則
@@ -117,9 +92,8 @@ exports.getArticleById = (req, res) => {
 // 根據id更新文章分類的處理函數
 exports.updateCateById = (req, res) => {
   const userinfo = req.body
-
   // 用joi來驗證表單數據是否符合規則
-  const { error, value } = update_cate_schema.validate({ id: userinfo.id, name: userinfo.name, alias: userinfo.alias })
+  const { error, value } = update_cate_schema.validate({ id: userinfo.Id, name: userinfo.name, alias: userinfo.alias })
   if (error) {
     return res.cc(error.details[0].message)
   }
@@ -129,7 +103,7 @@ exports.updateCateById = (req, res) => {
   // 查詢id不等於提交過來的id的數據，從這些數據中查詢name和alias有沒有被佔用。
   const sql = 'select * from ev_article_cate where Id<>? and (name=? or alias=?)'
   // 調用db.query()執行查重的操作
-  db.query(sql, [userinfo.id, userinfo.name, userinfo.alias], (err, results) => {
+  db.query(sql, [userinfo.Id, userinfo.name, userinfo.alias], (err, results) => {
     // 執行SQL語句失敗
     if (err) return res.cc(err)
     // 判斷 分類名稱 和 分類別名 是否被佔用
@@ -141,7 +115,7 @@ exports.updateCateById = (req, res) => {
     // 定義更新文章分類的SQL語句
     const sql = 'update ev_article_cate set ? where Id=?'
     // 調用db.query()執行SQL語句
-    db.query(sql, [userinfo, userinfo.id], (err, results) => {
+    db.query(sql, [userinfo, userinfo.Id], (err, results) => {
       // 如果執行SQL語句失敗
       if (err) return res.cc(err)
       // 如果執行SQL語句成功，但是影響行數不等於1
@@ -151,6 +125,31 @@ exports.updateCateById = (req, res) => {
         status: 0,
         message: '更新文章分類成功！',
       })
+    })
+  })
+}
+
+// 根據id刪除文章分類的處理函數
+exports.deleteCateById = (req, res) => {
+  // 用joi來驗證表單數據是否符合規則
+  const { error, value } = cate_id_schema.validate({ id: req.params.id })
+  if (error) {
+    return res.cc(error.details[0].message)
+  }
+
+  // 實現刪除文章分類的功能
+  // 定義刪除文章分類的SQL語句
+  const sql = 'update ev_article_cate set is_delete=1 where id=?'
+  // 調用db.query()執行刪除文章分類的SQL語句
+  db.query(sql, req.params.id, (err, results) => {
+    // 如果執行SQL語句失敗
+    if (err) return res.cc(err)
+    // 如果SQL語句執行成功，但是影響行數不等於1
+    if (results.affectedRows !== 1) return res.cc('刪除文章分類失敗TT')
+    // 刪除文章分類成功
+    res.send({
+      status: 0,
+      message: '成功刪除文章分類！'
     })
   })
 }

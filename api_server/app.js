@@ -3,7 +3,6 @@ const express = require('express')
 // 创建express的服务器实例
 const app = express()
 
-
 // 导入cors中间件，解决跨域的问题
 const cors = require('cors')
 app.use(cors())
@@ -51,7 +50,7 @@ app.use('/my', userinfoRouter)
 
 // 導入並使用文章分類路由模塊
 const artCateRouter = require('./router/artcate')
-app.use('/my/article', artCateRouter)
+app.use('/my/artcate', artCateRouter)
 
 // 導入並使用文章路由模塊
 const articleRouter = require('./router/article')

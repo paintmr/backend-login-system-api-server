@@ -4,7 +4,7 @@ const db = require('../db/index')
 const bcrypt = require('bcryptjs')
 
 // 導入需要的驗證規則對象
-const { update_userinfo_schema, update_password_schema, update_avatar_schema } = require('../schema/user')
+const { update_userinfo_schema, update_password_schema, update_avatar_schema } = require('../schema/userinfo')
 
 // 获取用户基本信息的处理函数
 exports.getUserInfo = (req, res) => {
