@@ -27,9 +27,8 @@ app.use((req, res, next) => {
 const expressJWT = require('express-jwt')
 // 導入配置文件
 const config = require('./config')
-// 解密配置文件中的秘鑰，並使用.uless()指定哪些接口無需token身份認證
-app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
-
+// 解密配置文件中的秘鑰，並使用.uless()指定哪些接口無需token身份認證。要把圖片文件夾uploads寫進unless中，否則在編輯文章時，前端的img標籤無法拿到文章對應的封面圖片。
+app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//, /^\/uploads\//] }))
 // 定義錯誤級別的中間件
 app.use((err, req, res, next) => {
   // 身份認證失敗導致的錯誤

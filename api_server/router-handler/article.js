@@ -11,6 +11,7 @@ exports.getArticles = (req, res) => {
   // 定義SQL語句
   // 根據文章的狀態，獲取所有未被刪除的文章數據
   // is_delete為0表示沒有被標記為刪除的數據
+  console.log(req.query)
   const sql = 'select * from ev_articles where is_delete=0 order by id asc'
   // 調用db.query()執行SQL語句
   db.query(sql, (err, results) => {
@@ -45,15 +46,12 @@ exports.addArticle = (req, res) => {
     // 標題、內容、狀態、所屬的分類Id
     ...req.body,
     // 文章封面在服務器端的存放路徑
-    // cover_img: path.join('/uploads', req.file.filename),
-    // cover_img: path.join('http://127.0.0.1:3007/uploads/', req.file.filename),
-    cover_img: req.file.filename,
+    cover_img: path.join('/uploads', req.file.filename),
     // 文章發佈時間
     pub_date: new Date(),
     // 文章作者的Id
     author_id: req.user.id,
   }
-
   // 如果articleInfo中有空的Id（发布文章时发送来的数据），则把这个属性去掉。以便写入数据库时系统自动填写。否则Id=''报错。
   if (!articleInfo.Id) {
     const { Id: Id, ...restData } = articleInfo
@@ -94,7 +92,6 @@ exports.getArticleById = (req, res) => {
     if (err) return res.cc(err)
     // 如果SQL語句執行成功，但是沒有查詢到任何數據
     if (results.length !== 1) return res.cc('獲取文章詳情失敗！')
-    // results[0].fullCoverImgURL = 'http://127.0.0.1:3007/uploads/' + results[0].cover_img
     // 把數據響應給客戶端
     res.send({
       status: 0,
@@ -124,8 +121,7 @@ exports.updateArticle = (req, res) => {
     // 標題、內容、狀態、所屬的分類Id
     ...req.body,
     // 文章封面在服務器端的存放路徑
-    // cover_img: path.join('/uploads', req.file.filename),
-    cover_img: req.file.filename,
+    cover_img: path.join('/uploads', req.file.filename),
     // 文章發佈時間
     pub_date: new Date(),
   }
