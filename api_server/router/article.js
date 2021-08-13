@@ -14,7 +14,8 @@ const path = require('path')
 const upload = multer({ dest: path.join(__dirname, '../uploads') })
 
 // 獲取文章列表的路由
-router.get('/artlist', article_handler.getArticles)
+router.get('/artlistshow', article_handler.getArticlesShow)
+router.get('/artlistAll', article_handler.getArticlesAll)
 
 // 發佈新文章的路由
 router.post('/addart', upload.single('cover_img'), article_handler.addArticle)

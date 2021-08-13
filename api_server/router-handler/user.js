@@ -93,7 +93,7 @@ exports.login = (req, res) => {
     const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
     if (!compareResult) return res.cc('登錄失敗！')
 
-    // 在服務器端生成Token字符串
+    // 在服務器端生成Token字符串。因為token會被保存到服務器端，所以不要包含密碼字段，否則不安全。
     const user = { ...results[0], password: '', user_pic: '' }
     // 第1個參數是待加密的數據，第2個參數是秘鑰，第3個參數中的1個鍵值對表示token的有效期
     const tokenStr = jwt.sign(user, config.jwtSecretKey, {

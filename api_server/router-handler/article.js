@@ -5,25 +5,55 @@ const path = require('path')
 // 導入數據庫操作模塊
 const db = require('../db/index')
 
-// 獲取文章列表的處理函數
-exports.getArticles = (req, res) => {
+// 獲取文章列表的處理函數——获取展示的那一部分
+exports.getArticlesShow = (req, res) => {
   // 獲取文章列表數據
   // 定義SQL語句
   // 根據文章的狀態，獲取所有未被刪除的文章數據
   // is_delete為0表示沒有被標記為刪除的數據
-  console.log(req.query)
-  const sql = 'select * from ev_articles where is_delete=0 order by id asc'
+  let cate_id = req.query.cate_id ? ' and cate_id = ' + req.query.cate_id : ' '
+  let state = req.query.state ? ' and state = ' + '"' + req.query.state + '"' : ' '
+  const sql = 'select * from ev_articles where is_delete=0' + cate_id + state + ' order by id asc limit ' + (req.query.pagenum - 1) * req.query.pagesize + ' , ' + req.query.pagesize
   // 調用db.query()執行SQL語句
   db.query(sql, (err, results) => {
     // 執行SQL語句失敗
     if (err) return res.cc(err)
+
     // 執行SQL語句成功
     res.send({
       status: 0,
       message: '獲取文章列表成功！',
       data: results
     })
+
   })
+}
+
+// 獲取文章列表的處理函數——获取所有的文章数量
+exports.getArticlesAll = (req, res) => {
+  {
+    // 獲取文章列表數據
+    // 定義SQL語句
+    // 根據文章的狀態，獲取所有未被刪除的文章數據
+    // is_delete為0表示沒有被標記為刪除的數據
+    let cate_id = req.query.cate_id ? ' and cate_id = ' + req.query.cate_id : ' '
+    let state = req.query.state ? ' and state = ' + '"' + req.query.state + '"' : ' '
+
+    const sql = 'select * from ev_articles where is_delete=0 ' + cate_id + state + ' order by id asc'
+    // 調用db.query()執行SQL語句
+    db.query(sql, (err, results) => {
+      // 執行SQL語句失敗
+      if (err) return res.cc(err)
+
+      // 執行SQL語句成功
+      res.send({
+        status: 0,
+        message: '獲取文章列表成功！',
+        data: results.length
+      })
+
+    })
+  }
 }
 
 // 發佈新文章的處理函數
