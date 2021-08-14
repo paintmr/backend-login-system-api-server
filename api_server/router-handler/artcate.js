@@ -73,7 +73,7 @@ exports.getArticleById = (req, res) => {
 
   // 實現獲取文章分類的功能
   // 定義根據id獲取文章分類的SQL語句
-  const sql = 'select * from ev_article_cate where is_delete=0 and id=?'
+  const sql = 'select * from ev_article_cate where id=?'
   // 調用db.query()執行SQL語句：
   db.query(sql, req.params.id, (err, results) => {
     // 如果執行SQL語句失敗

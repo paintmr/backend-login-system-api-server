@@ -11,8 +11,10 @@ exports.getArticlesShow = (req, res) => {
   // 定義SQL語句
   // 根據文章的狀態，獲取所有未被刪除的文章數據
   // is_delete為0表示沒有被標記為刪除的數據
+  // 如果用户选择了根据文章类别显示文章列表，则根据文章类别的id（cate_id）来筛选，否则不设置这个条件
   let cate_id = req.query.cate_id ? ' and cate_id = ' + req.query.cate_id : ' '
   let state = req.query.state ? ' and state = ' + '"' + req.query.state + '"' : ' '
+  // 如果用户选择了根据文章的状态（已发布or草稿）显示文章列表,则根据文章状态（state）来筛选，否则不设置这个条件
   const sql = 'select * from ev_articles where is_delete=0' + cate_id + state + ' order by id asc limit ' + (req.query.pagenum - 1) * req.query.pagesize + ' , ' + req.query.pagesize
   // 調用db.query()執行SQL語句
   db.query(sql, (err, results) => {
